@@ -1,4 +1,18 @@
-#include <bits/stdc++.h>
+#include <string>
+#include <algorithm>
+#include <vector>
+using namespace std;
+
+// Approach name: Longest-Common Subsequence (Longest Palindromic Subsequence)
+// Time Complexity = O(n^2)
+// Space Complexity = O(n^2)
+
+// The number of letters to add is the (size of string) - (length of longest palindromic)
+// Example:
+// String = mbadm
+// longest palindromic substring = mam
+// number of letters to add = 5 - 3 = 2
+// palindromic string = mbdadbm / mdbabdm
 
 class Solution {
 public:
