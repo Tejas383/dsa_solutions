@@ -1,33 +1,49 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+// Approach Name: Sliding Window
+// Time ciomplexity = O(n log k)
+// Space complexity = O(n)
+
+// Idea: Maintain a window containing only unique characters.
+// Expand the window when the next character is not present.
+// If a duplicate is found,
+// shrink the window from the left until the previous occurrence of that
+// character is removed.
+
 class Solution {
-public:
-    int lengthOfLongestSubstring(string s) {
-        map<char, int> freq;
-        int start = 0;
-        int ans = 0;
-        int len = 0;
-        for (int i = 0; i < s.size(); i++) {
-            if (!freq.count(s[i]) || freq[s[i]] == 0) {
-                freq[s[i]] = 1;
-                len++;
-            }
-            else { // freq[s[i]] == 1
-                while (true) {
-                    freq[s[start]] = 0;
-                    len--;
-                    if (s[start] == s[i]) {
-                        start++;
-                        len++;
-                        break;
-                    }
-                    start++;
-                }
-                freq[s[i]] = 1;
-            }
-            ans = max(ans, len);
+ public:
+  int lengthOfLongestSubstring(string s) {
+    map<char, bool> pres;
+
+    int start = 0;
+    int len = 0;
+    int ans = 0;
+
+    for (auto c : s) {
+      if (pres.find(c) == pres.end() || pres[c] == false) {
+        pres[c] = true;
+        len++;
+      } else {
+        while (true) {
+          pres[s[start]] = false;
+          len--;
+
+          if (s[start] == c) {
+            start++;
+            len++;
+            break;
+          }
+
+          start++;
         }
-        return ans;
+
+        pres[c] = true;
+      }
+
+      ans = max(len, ans);
     }
+
+    return ans;
+  }
 };
