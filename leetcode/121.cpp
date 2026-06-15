@@ -1,23 +1,28 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+// Approach Name: Reverse Traversal
+// Time ciomplexity = O(n)
+// Space complexity = O(1)
+
 class Solution {
-public:
-    int maxProfit(vector<int>& prices) {
-        if (prices.size() < 2) return 0;
+ public:
+  int maxProfit(vector<int>& prices) {
+    int maxPrice = -1;
+    int ans = 0;
 
-        int i = 0;
-        int min = 0;
-        int ans = 0;
+    for (int i = prices.size() - 1; i >= 0; i--) {
+      int price = prices[i];
 
-        while (i < prices.size()) {
-            if (prices[i] < prices[min]) {
-                min = i;
-            }
-            ans = max(ans, prices[i] - prices[min]);
-            i++;
-        }
+      int value = maxPrice - price;
 
-        return ans;
+      if (price > maxPrice) {
+        maxPrice = price;
+      }
+
+      ans = max(ans, value);
     }
+
+    return ans;
+  }
 };
