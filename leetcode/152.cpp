@@ -1,36 +1,26 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// Approach Name: Prefix Product + Suffix Product Traversal
+// Approach Name: Dynamic Programming
+// (Tracking Maximum and Minimum Product Ending at Each Index)
 // Time complexity = O(n)
-// Space complexity = O(n)
+// Space complexity = O(1)
 
 class Solution {
  public:
   int maxProduct(vector<int>& nums) {
-    int n = nums.size();
+    int minProd = 1;
+    int maxProd = 1;
 
-    vector<int> pre(n);
-    int prod = 1;
-    for (int i = 0; i < n; i++) {
-      prod *= nums[i];
-      pre[i] = prod;
+    int ans = 0;
 
-      if (prod == 0) prod = 1;
-    }
+    for (auto num : nums) {
+      if (num < 0) swap(minProd, maxProd);
 
-    vector<int> suf(n);
-    prod = 1;
-    for (int i = n - 1; i >= 0; i--) {
-      prod *= nums[i];
-      suf[i] = prod;
+      minProd = min(num, minProd * num);
+      maxProd = max(num, maxProd * num);
 
-      if (prod == 0) prod = 1;
-    }
-
-    int ans = INT_MIN;
-    for (int i = 0; i < n; i++) {
-      ans = max({ans, pre[i], suf[i]});
+      ans = max(ans, maxProd);
     }
 
     return ans;
