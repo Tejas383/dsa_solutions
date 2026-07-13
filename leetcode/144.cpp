@@ -52,17 +52,17 @@ struct TreeNode {
 
 class Solution {
  public:
-  void traverse(TreeNode* root, vector<int>& inOrder) {
+  void traverse(TreeNode* root, vector<int>& preOrder) {
     if (!root) return;
 
-    inOrder.push_back(root->val);
-    traverse(root->left, inOrder);
-    traverse(root->right, inOrder);
+    preOrder.push_back(root->val);
+    traverse(root->left, preOrder);
+    traverse(root->right, preOrder);
   }
 
   vector<int> preorderTraversal(TreeNode* root) {
-    vector<int> inOrder;
-    traverse(root, inOrder);
-    return inOrder;
+    vector<int> preOrder;
+    traverse(root, preOrder);
+    return preOrder;
   }
 };
