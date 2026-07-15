@@ -3,40 +3,45 @@ using namespace std;
 
 // Definition for a binary tree node.
 struct TreeNode {
-    int val;
-    TreeNode *left;
-    TreeNode *right;
-    TreeNode() : val(0), left(nullptr), right(nullptr) {}
-    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
-    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+  int val;
+  TreeNode* left;
+  TreeNode* right;
+  TreeNode() : val(0), left(nullptr), right(nullptr) {}
+  TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+  TreeNode(int x, TreeNode* left, TreeNode* right)
+      : val(x), left(left), right(right) {}
 };
 
+// Approach Name: Breadth-First Search (BFS) / Level Order Traversal using Queue
+// Time Complexity: O(n)
+// Space Complexity: O(n)
+
 class Solution {
-public:
-    vector<int> rightSideView(TreeNode* root) {
-        queue<pair<TreeNode*, int>> q;
-        map<int, int> m;
+ public:
+  vector<int> rightSideView(TreeNode* root) {
+    if (!root) return vector<int>();
 
-        if (root)
-            q.push({root, 0});
-        while (!q.empty()) {
-            pair<TreeNode*, int> p = q.front();
-            q.pop();
+    vector<int> ans;
+    queue<TreeNode*> q;
+    q.push(root);
 
-            TreeNode* node = p.first;
-            int level = p.second;
-            m[level] = node->val;
+    while (!q.empty()) {
+      int s = q.size();
+      int value;
 
-            if (node->left) 
-                q.push({node->left, level + 1});
-            if (node->right) 
-                q.push({node->right, level + 1});
-        }
+      while (s--) {
+        TreeNode* curr = q.front();
+        q.pop();
 
-        vector<int> rightView;
-        for (pair<int, int> p : m) 
-            rightView.push_back(p.second);
-        
-        return rightView;
+        value = curr->val;
+
+        if (curr->left) q.push(curr->left);
+        if (curr->right) q.push(curr->right);
+      }
+
+      ans.push_back(value);
     }
+
+    return ans;
+  }
 };
