@@ -13,70 +13,43 @@ class Node {
   }
 };
 
-// Approach Name: Breadth-First Search (BFS) with Parent Mapping
+// Approach Name: Single-Pass Recursive DFS (Height + Distance Propagation)
 // Time Complexity: O(n)
 // Space Complexity: O(n)
 
 class Solution {
+  int ans = 0;
+
+  int dfs(Node* root, int target) {
+    if (!root) return 0;
+
+    int left = dfs(root->left, target);
+    int right = dfs(root->right, target);
+
+    if (root->data == target) {
+      ans = max(left, right);
+      return -1;
+    }
+
+    if (left < 0) {
+      ans = max(ans, right - left);
+      return left - 1;
+    }
+
+    if (right < 0) {
+      ans = max(ans, left - right);
+      return right - 1;
+    }
+
+    return max(left, right) + 1;
+  }
+
  public:
   int minTime(Node* root, int target) {
     // code here
-    unordered_map<Node*, Node*> parent;
+    if (!root) return 0;
 
-    queue<Node*> q;
-    q.push(root);
-
-    Node* targetNode;
-
-    while (!q.empty()) {
-      Node* curr = q.front();
-      q.pop();
-
-      if (curr->data == target) targetNode = curr;
-
-      if (curr->left) {
-        parent[curr->left] = curr;
-        q.push(curr->left);
-      }
-
-      if (curr->right) {
-        parent[curr->right] = curr;
-        q.push(curr->right);
-      }
-    }
-
-    q.push(targetNode);
-    unordered_set<Node*> vis;
-    vis.insert(targetNode);
-
-    int time = 0;
-
-    while (!q.empty()) {
-      int s = q.size();
-
-      while (s--) {
-        Node* curr = q.front();
-        q.pop();
-
-        if (parent.count(curr) && !vis.count(parent[curr])) {
-          q.push(parent[curr]);
-          vis.insert(parent[curr]);
-        }
-
-        if (curr->left && !vis.count(curr->left)) {
-          q.push(curr->left);
-          vis.insert(curr->left);
-        }
-
-        if (curr->right && !vis.count(curr->right)) {
-          q.push(curr->right);
-          vis.insert(curr->right);
-        }
-      }
-
-      time++;
-    }
-
-    return --time;
+    dfs(root, target);
+    return ans;
   }
 };
