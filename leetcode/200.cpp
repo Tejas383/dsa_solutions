@@ -1,30 +1,48 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// Approach Name: Recursive DFS
+// Time complexity = O(n * m)
+// Space complexity = O(h)
+
 class Solution {
-public:
-    void dfs(vector<vector<char>>& grid, int i, int j) {
-        grid[i][j] = '2';
-        
-        if (i > 0 && grid[i - 1][j] == '1')
-            dfs(grid, i - 1, j);
-        if (i < grid.size() - 1 && grid[i + 1][j] == '1')
-            dfs(grid, i + 1, j);
-        if (j > 0 && grid[i][j - 1] == '1')
-            dfs(grid, i, j - 1);
-        if (j < grid[0].size() - 1 && grid[i][j + 1] == '1')
-            dfs(grid, i, j + 1); 
+  void disconnected(int i, int j, int n, int m, vector<vector<char>>& grid) {
+    vector<int> dx = {1, -1, 0, 0};
+    vector<int> dy = {0, 0, 1, -1};
+
+    int newI = i;
+    int newJ = j;
+
+    for (int k = 0; k < 4; k++) {
+      newI = i + dx[k];
+      newJ = j + dy[k];
+
+      if (newI >= 0 && newI < n 
+          && newJ >= 0 && newJ < m 
+          && grid[newI][newJ] == '1') 
+      {
+        grid[newI][newJ] = '0';
+        disconnected(newI, newJ, n, m, grid);
+      }
     }
+  }
 
-    int numIslands(vector<vector<char>>& grid) {
-        int count = 0;
+ public:
+  int numIslands(vector<vector<char>>& grid) {
+    int n = grid.size();
+    int m = grid[0].size();
 
-        for (int i = 0; i < grid.size(); i++) {
-            for (int j = 0; j < grid[i].size(); j++) {
-                if (grid[i][j] == '1') {
-                    count++;
-                    dfs(grid, i, j);
-                }
-            }
+    int count = 0;
+
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < m; j++) {
+        if (grid[i][j] == '1') {
+          count++;
+          disconnected(i, j, n, m, grid);
         }
-
-        return count;
+      }
     }
+
+    return count;
+  }
 };
