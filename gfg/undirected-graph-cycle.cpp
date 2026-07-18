@@ -95,3 +95,42 @@ class Solution {
     return false;
   }
 };
+
+// Approach 3 : Disjoint-Set Union
+// Time Complexity = O(E · α(V))
+// Space Complexity = O(V)
+
+class Solution {
+  vector<int> parent;
+
+  void makeUnion(int a, int b) {
+    int parentA = find(a);
+    int parentB = find(b);
+
+    if (parentA == parentB) return;
+
+    parent[parentA] = parentB;
+  }
+
+  int find(int a) {
+    if (parent[a] == a) return a;
+
+    return parent[a] = find(parent[a]);
+  }
+
+ public:
+  bool isCycle(int V, vector<vector<int>>& edges) {
+    // Code here
+    parent.resize(V);
+    for (int i = 0; i < V; i++) {
+      parent[i] = i;
+    }
+
+    for (auto edge : edges) {
+      if (find(edge[0]) == find(edge[1])) return true;
+      makeUnion(edge[0], edge[1]);
+    }
+
+    return false;
+  }
+};
