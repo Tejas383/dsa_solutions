@@ -1,83 +1,102 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+// Approach Name: Level Order Traversal
+// Time complexity = O(n)
+// Space complexity = O(h)
+// where,
+// n = number of nodes
+// h = height of the tree
+
 // Definition for a binary tree node.
 struct TreeNode {
-    int val;
-    TreeNode *left;
-    TreeNode *right;
-    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+  int val;
+  TreeNode* left;
+  TreeNode* right;
+  TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
 class Codec {
-public:
-    // Level Order TRaversal
-    
-    // Encodes a tree to a single string.
-    string serialize(TreeNode* root) {
-        if (!root)
-            return "";
-        
-        string str = "";
-        // str += to_string(root->val);
-        // str += ".";
+ public:
+  // Encodes a binary tree into a string using Level Order Traversal.
+  // Null nodes are represented using 'x'.
+  string serialize(TreeNode* root) {
+    string ser = "";
 
-        queue<TreeNode*> q;
-        q.push(root);
+    if (!root) return ser;
 
-        while (!q.empty()) {
-            auto curr = q.front();
-            q.pop();
+    queue<TreeNode*> q;
+    q.push(root);
 
-            if (!curr)
-                str.append("x.");
-            else {
-                str.append(to_string(curr->val) + ".");
-                q.push(curr->left);
-                q.push(curr->right);
-            }
-        }
+    while (!q.empty()) {
+      TreeNode* curr = q.front();
+      q.pop();
 
-        return str;
+      // Store a marker for null nodes.
+      if (!curr) {
+        ser += "x.";
+      } else {
+        // Store the current node's value.
+        ser += to_string(curr->val);
+        ser += ".";
+
+        // Push both children, including nullptr,
+        // so the exact tree structure is preserved.
+        q.push(curr->left);
+        q.push(curr->right);
+      }
     }
 
-    // Decodes your encoded data to tree.
-    TreeNode* deserialize(string data) {
-        if (data == "")
-            return nullptr;
+    return ser;
+  }
 
-        stringstream str(data);
-        string s;
-        getline(str, s, '.');
+  // Decodes the serialized string back into the original tree.
+  TreeNode* deserialize(string data) {
+    if (data == "") return nullptr;
 
-        TreeNode* root = new TreeNode(stoi(s));
-        
-        queue<TreeNode*> q;
-        q.push(root);
-        
-        while (!q.empty()) {
-            auto node = q.front();
-            q.pop();
+    // Split the serialized string using '.' as the delimiter.
+    vector<string> vec;
+    stringstream str(data);
+    string token;
 
-            getline(str, s, '.');
-            if (s == "x")
-                node->left = nullptr;
-            else {
-                node->left = new TreeNode(stoi(s));
-                q.push(node->left);
-            }
+    while (getline(str, token, '.')) vec.push_back(token);
 
-            getline(str, s, '.');
-            if (s == "x")
-                node->right = nullptr;
-            else {
-                node->right = new TreeNode(stoi(s));
-                q.push(node->right);
-            }
+    // First value is always the root.
+    int i = 0;
+    TreeNode* root = new TreeNode(stoi(vec[0]));
+
+    queue<TreeNode*> q;
+    q.push(root);
+    i++;
+
+    // Reconstruct the tree level by level.
+    while (!q.empty()) {
+      TreeNode* curr = q.front();
+      q.pop();
+
+      // Create the left child if it is not null.
+      if (i < vec.size()) {
+        if (vec[i] != "x") {
+          TreeNode* left = new TreeNode(stoi(vec[i]));
+          curr->left = left;
+          q.push(left);
         }
-        
-        return root;
+        i++;
+      }
+
+      // Create the right child if it is not null.
+      if (i < vec.size()) {
+        if (vec[i] != "x") {
+          TreeNode* right = new TreeNode(stoi(vec[i]));
+          curr->right = right;
+          q.push(right);
+        }
+        i++;
+      }
     }
+
+    return root;
+  }
 };
 
 // Your Codec object will be instantiated and called as such:
