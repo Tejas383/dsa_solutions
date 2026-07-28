@@ -21,6 +21,10 @@ class Solution {
 
       while (cnt >= k) {
         ans += nums.size() - i;
+        // if this particular index (i) is contributing to the answer,
+        // every index after that will also contribute, since
+        // extending the right end can only increase (or keep) the number of
+        // equal pairs.
 
         freq[nums[j]]--;
         cnt -= freq[nums[j]];
