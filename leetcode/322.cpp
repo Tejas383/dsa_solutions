@@ -1,33 +1,87 @@
 #include <bits/stdc++.h>
+using namespace std;
+
+// Approach 1: Recursion (Brute Force - Take/Skip)
+// Time complexity = O(2 ^ (n + amount))
+// Space complexity = O(n + amount)
 
 class Solution {
-public:
-    int coinChange(vector<int>& coins, int amount) {
-        vector<vector<int>> dp(coins.size() + 1, vector<int> (amount + 1));
+  int helper(int i, int amount, auto coins) {
+    if (i >= coins.size()) return 1e9;
 
-        // we can not make a particular amount if number of coins is 0
-        // therefore, the number of coins is set to max
-        // MAX_INT - 1 -> to control integer overflow
-        for (int j = 0; j < dp[0].size(); j++)
-            dp[0][j] = INT_MAX - 1;
-        
-        // to create the amount of 0, we donot need any coins
-        // therefore, the whole column is 0
-        for (int i = 0; i < dp.size(); i++) 
-            dp[i][0] = 0;
-        
-        for (int i = 1; i < dp.size(); i++) {
-            for (int j = 1; j < dp[i].size(); j++) {
-                if (coins[i - 1] <= j)
-                    dp[i][j] = min(1 + dp[i][j - coins[i - 1]], dp[i - 1][j]);
-                else 
-                    dp[i][j] = dp[i - 1][j];
-            }
-        }
+    if (amount == 0) return 0;
 
-        if (dp[coins.size()][amount] >= INT_MAX - 1) 
-            return -1;
+    int take = INT_MAX;
+    if (coins[i] <= amount) 
+      take = 1 + helper(i, amount - coins[i], coins);
+    int skip = helper(i + 1, amount, coins);
 
-        return dp[coins.size()][amount];
-    }
+    return min(take, skip);
+  }
+
+ public:
+  int coinChange(vector<int>& coins, int amount) {
+    int n = coins.size();
+    return helper(0, amount, coins) >= 1e9 ? -1 : helper(0, amount, coins);
+  }
+};
+
+// Approach 2: Top-Down Dynamic Programming (Recursion + Memoization)
+// Time complexity = O(n * amount)
+// Space complexity = O(n * amount)
+
+class Solution {
+  vector<vector<int>> dp;
+
+  int helper(int i, int amount, vector<int>& coins) {
+    if (amount == 0) return dp[i][amount] = 0;
+
+    if (i >= coins.size()) return 1e9;
+
+    if (dp[i][amount] != -1) return dp[i][amount];
+
+    int take = 1e9;
+    if (coins[i] <= amount) take = 1 + helper(i, amount - coins[i], coins);
+    int skip = helper(i + 1, amount, coins);
+
+    return dp[i][amount] = min(take, skip);
+  }
+
+ public:
+  int coinChange(vector<int>& coins, int amount) {
+    int n = coins.size();
+    dp.resize(n, vector<int>(amount + 1, -1));
+    int ans = helper(0, amount, coins);
+    return ans >= 1e9 ? -1 : ans;
+  }
+};
+
+// Approach 3: Bottom-Up Dynamic Programming (Tabulation)
+// Time complexity = O(n)
+// Space complexity = O(n)
+
+class Solution {
+  vector<vector<int>> dp;
+
+  int helper(int i, int amount, vector<int>& coins) {
+    if (amount == 0) return dp[i][amount] = 0;
+
+    if (i >= coins.size()) return 1e9;
+
+    if (dp[i][amount] != -1) return dp[i][amount];
+
+    int take = 1e9;
+    if (coins[i] <= amount) take = 1 + helper(i, amount - coins[i], coins);
+    int skip = helper(i + 1, amount, coins);
+
+    return dp[i][amount] = min(take, skip);
+  }
+
+ public:
+  int coinChange(vector<int>& coins, int amount) {
+    int n = coins.size();
+    dp.resize(n, vector<int>(amount + 1, -1));
+    int ans = helper(0, amount, coins);
+    return ans >= 1e9 ? -1 : ans;
+  }
 };
