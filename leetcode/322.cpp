@@ -12,8 +12,7 @@ class Solution {
     if (amount == 0) return 0;
 
     int take = INT_MAX;
-    if (coins[i] <= amount) 
-      take = 1 + helper(i, amount - coins[i], coins);
+    if (coins[i] <= amount) take = 1 + helper(i, amount - coins[i], coins);
     int skip = helper(i + 1, amount, coins);
 
     return min(take, skip);
@@ -57,8 +56,8 @@ class Solution {
 };
 
 // Approach 3: Bottom-Up Dynamic Programming (Tabulation)
-// Time complexity = O(n)
-// Space complexity = O(n)
+// Time complexity = O(n * amount)
+// Space complexity = O(n * amount)
 
 class Solution {
   vector<vector<int>> dp;
