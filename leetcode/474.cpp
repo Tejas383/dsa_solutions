@@ -58,8 +58,9 @@ class Solution {
   }
 };
 
-// Approach 3: Bottom-Up Dynamic Programming (Tabulation) (0/1 Knapsack / Subset
-// Sum) Time complexity = O(sz * m * n) Space complexity = O(sz * m * n)
+// Approach 3: Bottom-Up Dynamic Programming (Tabulation) (0/1 Knapsack)
+// Time complexity = O(sz * m * n) 
+// Space complexity = O(sz * m * n)
 
 class Solution {
  public:
