@@ -1,35 +1,46 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// Approach Name: Sorting + Longest Increasing Subsequence (Patience Sorting)
+// Time complexity = O(n log n)
+// Space complexity = O(n)
+
 class Solution {
-public:
-    static bool comp(vector<int>& a, vector<int> &b) {
-        if (a[0] == b[0])
-            return a[1] > b[1];
-        else 
-            return a[0] < b[0];
-    }
+  static bool comp(vector<int>& a, vector<int>& b) {
+    if (a[0] == b[0])
+      return a[1] > b[1];
+    else
+      return a[0] < b[0];
+  }
 
-    int maxEnvelopes(vector<vector<int>>& envelopes) {
-        sort(envelopes.begin(), envelopes.end(), comp);
-        
-        vector<int> lis;
+ public:
+  int maxEnvelopes(vector<vector<int>>& envelopes) {
+    sort(envelopes.begin(), envelopes.end(), comp);
+    vector<int> lis;
 
-        for (auto envelope : envelopes) {
-            if (lis.empty() || lis[lis.size() - 1] < envelope[1]) 
-                lis.push_back(envelope[1]);
-            else {
-                int start = 0;
-                int end = lis.size() - 1;
-                while (start < end) {
-                    int mid = (start + end) / 2;
-                    
-                    if (envelope[1] <= lis[mid]) 
-                        end = mid;
-                    else 
-                        start = mid + 1;
-                }
-                lis[start] = envelope[1];
-            }
+    for (const auto& envelope : envelopes) {
+      int bredth = envelope[1];
+
+      if (lis.empty() || bredth > lis[lis.size() - 1])
+        lis.push_back(bredth);
+      else {
+        int low = 0;
+        int high = lis.size() - 1;
+        int mid;
+
+        while (low < high) {
+          mid = (low + high) / 2;
+
+          if (lis[mid] < bredth)
+            low = mid + 1;
+          else
+            high = mid;
         }
 
-        return lis.size();
+        lis[low] = bredth;
+      }
     }
+
+    return lis.size();
+  }
 };
