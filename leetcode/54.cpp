@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-// Approach Name: Layer-by-Layer Spiral Traversal
+// Approach 1: Layer-by-Layer Spiral Traversal
 // Time complexity = O(m * n)
 // Space complexity = O(1)
 
@@ -38,6 +38,48 @@ class Solution {
       while (spiral.size() < s && i >= t) spiral.push_back(matrix[i--][j]);
       i++;
       j++;
+    }
+
+    return spiral;
+  }
+};
+
+// Approach 2 : Boundary Shrinking Traversal
+// Time Complexity : O(m * n)
+// Space Complexity : O(1)
+
+class Solution {
+ public:
+  vector<int> spiralOrder(vector<vector<int>>& matrix) {
+    vector<int> spiral;
+
+    int i = 0;
+    int j = 0;
+
+    int m = matrix.size();
+    int r = -1;
+    int n = matrix[0].size();
+    int c = -1;
+
+    int s = m * n;
+
+    while (spiral.size() < s) {
+      while (spiral.size() < s && j < n) spiral.push_back(matrix[i][j++]);
+      j--;
+      i++;
+      n--;
+      while (spiral.size() < s && i < m) spiral.push_back(matrix[i++][j]);
+      i--;
+      j--;
+      m--;
+      while (spiral.size() < s && j > c) spiral.push_back(matrix[i][j--]);
+      j++;
+      i--;
+      r++;
+      while (spiral.size() < s && i > r) spiral.push_back(matrix[i--][j]);
+      i++;
+      j++;
+      c++;
     }
 
     return spiral;
